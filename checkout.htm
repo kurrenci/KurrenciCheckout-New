@@ -1,0 +1,152 @@
+<html>
+<head>
+    <title></title>
+    <script language="javascript" type="text/javascript" src="http://localhost/Scripts/dev.checkout.js"></script>
+    <script>
+        //Create token and cancel submission request
+        function Checkout() 
+        {
+            document.getElementById("loading").style.display = "inline";
+            document.getElementById("checkoutbutton").disabled = true;
+            Kurrenci.createToken("22", "12345", responseHandler);
+            
+            return false;
+        }
+
+
+       
+        function responseHandler(response, status) {
+            
+            //If the status is ok, submit transaction and resume submission
+            if (status.message == "Ok") {
+
+                //Add shopping cart items
+                var shoppingCartItems = new Array();
+
+                shoppingCartItems[0] = { 'itemId': 'roses1', 
+                    'itemName': 'roses1', 
+                    'itemDescription': 'Beautiful roses', 
+                    'sku': '1234', 
+                    'price': 150, 
+                    'additionalInformation' : 'Additional Information goes here.',
+                    'kurrenciDiscount' : 0,
+                    'priceCharged' : 150.00,
+                    'priceList' : 123.00,
+                    'priceRetail' : 123.00,
+                    'shipping': 0,
+                    'vendorCategoryId' : 'Roses',
+                    'vendorCategoryName' : 'Flowers',
+                    'vendorPromoDiscount':  '0',
+                    'quantity': 1,                 
+                    'token': response.token
+                };
+
+                shoppingCartItems[1] = { 'itemId': 'roses2',
+                    'itemName': 'roses2',
+                    'itemDescription': 'Beautiful roses',
+                    'sku': '1234',
+                    'price': 150,
+                    'additionalInformation': 'Additional Information goes here.',
+                    'kurrenciDiscount': 0,
+                    'priceCharged': 165.00,
+                    'priceList': 123.00,
+                    'priceRetail': 123.00,
+                    'shipping': 0,
+                    'vendorCategoryId': 'Roses',
+                    'vendorCategoryName': 'Flowers',
+                    'vendorPromoDiscount': '0',
+                    'quantity': 1,
+                    'token': response.token
+                };
+
+
+                shoppingCartItems[2] = { 'itemId': 'roses3',
+                    'itemName': 'roses3',
+                    'itemDescription': 'Beautiful roses',
+                    'sku': '1234',
+                    'price': 150,
+                    'additionalInformation': 'Additional Information goes here.',
+                    'kurrenciDiscount': 0,
+                    'priceCharged': 250.00,
+                    'priceList': 123.00,
+                    'priceRetail': 123.00,
+                    'shipping': 0,
+                    'vendorCategoryId': 'Roses',
+                    'vendorCategoryName': 'Flowers',
+                    'vendorPromoDiscount': '0',
+                    'quantity': 1,
+                    'token': response.token
+                };
+
+                shoppingCartItems[3] = { 'itemId': 'roses1',
+                    'itemName': 'roses1',
+                    'itemDescription': 'Beautiful roses',
+                    'sku': '1234',
+                    'price': 150,
+                    'additionalInformation': 'Additional Information goes here.',
+                    'kurrenciDiscount': 0,
+                    'priceCharged': 250.00,
+                    'priceList': 123.00,
+                    'priceRetail': 123.00,
+                    'shipping': 0,
+                    'vendorCategoryId': 'Roses',
+                    'vendorCategoryName': 'Flowers',
+                    'vendorPromoDiscount': '0',
+                    'quantity': 1,
+                    'token': response.token
+                };
+
+//                shoppingCartItems[0] = { 'itemId': object.id, 'itemName': 'Sneakers1', 'itemDescription': 'Hot sneakers', 'sku': '1234', 'price': 150, 'quantity': 1, 'token': response.token };
+//                shoppingCartItems[1] = { 'itemId': 2, 'itemName': 'Sneakers2', 'itemDescription': 'Hot sneakers', 'sku': '5678', 'price': 10, 'quantity': 1, 'token': response.token };
+//                shoppingCartItems[2] = { 'itemId': 3, 'itemName': 'Sneakers3', 'itemDescription': 'Hot sneakers', 'sku': '1213', 'price': 105.99, 'quantity': 1, 'token': response.token };
+                Kurrenci.CartTotalPrice = 280;
+                Kurrenci.CartTotalTax = 12;
+                Kurrenci.addShoppingCartItems(shoppingCartItems);
+
+               
+
+                //Add shipping methods
+                var shippingMethods = new Array();
+                shippingMethods[0] = { 'name': 'UPS', 'price': 10.59, 'token': response.token };
+                shippingMethods[1] = { 'name': 'FEDEX', 'price': 22.99, 'token': response.token };
+                shippingMethods[2] = { 'name': 'Air Mail', 'price': 32.85, 'token': response.token };
+                Kurrenci.addShippingMethods(shippingMethods);
+
+                //Submit form
+                var form = $("#kurrenciCheckoutFrm");
+             
+
+                window.setTimeout(function () {
+                    document.getElementById("loading").style.display = "none";
+                    document.getElementById("checkoutbutton").disabled = false;
+
+                    form.get(0).submit()
+                }, '2500')
+            }
+
+            //Stop transaction and display error message
+            else {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("checkoutbutton").disabled = false;
+                alert(response.message);
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+    <br />
+    <br />
+    <br />
+    <br />
+    <form action="https://127.0.0.1/custom/public/checkout/iframe.htm" onsubmit="return Checkout();" id="kurrenciCheckoutFrm">
+    <input type="text" class="total" /><br />
+    <input type="text" class="subtotal" /><br />
+    <input type="image" src="https://127.0.0.1/custom/public/checkout/images/button-checkout.png" id="checkoutbutton" style="height:auto" value="Check out with Kurrenci"/> 
+    
+    <span id="loading" style="display:none">
+        <img src="https://127.0.0.1/images/circle-ball.gif" />
+    </span>
+    </form>
+</body>
+</html>
